@@ -50,25 +50,25 @@ export class Janken extends Component {
       };
 
       const jan = parseInt(((Math.random() * 3)));
+      now.tri = jan;
       if(jan === a){
         // 引き分け
         result2.draw = result2.draw + 1;
         now.winKind = WinKind.draw;
-      } else if(jan === a + 1){
-        // 負け
-        // 0=グー+1=>チョキ === a=0グー 負け
+      } else if((a === JankenTri.gu && jan === JankenTri.choki)
+        || (a === JankenTri.choki && jan === JankenTri.pa)
+        || (a === JankenTri.pa && jan === JankenTri.gu))
+       {
+        // 勝ち
+        result2.win = result2.win + 1;
+        now.winKind = WinKind.win;
         result2.lose = result2.lose + 1;
         now.winKind = WinKind.lose;
-      } else if(jan === 2 && a === 0){
+      } else {
         // 負け
         // jan=2 パー a=0 グー
         result2.lose = result2.lose + 1;
         now.winKind = WinKind.lose;
-      } else if(jan === 2 && a === 1){
-        // 勝ち
-        // jan=2 パー a=1 チョキ
-        result2.win = result2.win + 1;
-        now.winKind = WinKind.win;
       }
       this.setState(
         {
