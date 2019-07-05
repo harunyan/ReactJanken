@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { PrintJanken } from './PrintJaken';
 import { JankenButton, JankenTri } from './JankenButton';
+import { PrintNowResult } from './PrintNowResult';
+import { WinKind } from './WinKind';
 
 export class Janken extends Component {
   static displayName = Janken.name;
@@ -14,6 +16,10 @@ export class Janken extends Component {
         lose:1,
         draw:2,
         count:6
+      },
+      now:{
+        tri:JankenTri.gu,
+        winKind:WinKind.draw
       }
     };
   }
@@ -38,29 +44,43 @@ export class Janken extends Component {
 
     Button_onClick(a, b, c){
       let result2 = this.state.result;
+      let now = {
+        tri:JankenTri.gu,
+        winKind:WinKind.draw
+      };
+
       const jan = parseInt(((Math.random() * 3)));
       if(jan === a){
         // 引き分け
         result2.draw = result2.draw + 1;
+        now.winKind = WinKind.draw;
       } else if(jan === a + 1){
         // 負け
         // 0=グー+1=>チョキ === a=0グー 負け
         result2.lose = result2.lose + 1;
+        now.winKind = WinKind.lose;
       } else if(jan === 2 && a === 0){
         // 負け
         // jan=2 パー a=0 グー
         result2.lose = result2.lose + 1;
+        now.winKind = WinKind.lose;
       } else if(jan === 2 && a === 1){
         // 勝ち
         // jan=2 パー a=1 チョキ
         result2.win = result2.win + 1;
+        now.winKind = WinKind.win;
       }
-      this.setState({result: result2});
+      this.setState(
+        {
+          result: result2,
+          now:now
+        });
     }
 
     render () {
       return (
         <div>
+          <PrintNowResult value={this.state.now.tri} winKind={this.state.now.winKind}/>
           <PrintJanken value={this.state.result}/>
           <JankenButton tri={JankenTri.gu} onClick={this.Button_onClickG.bind(this, JankenTri.gu)}/>
           <JankenButton tri={JankenTri.choki} onClick={this.Button_onClickC.bind(this, JankenTri.choki)}/>
